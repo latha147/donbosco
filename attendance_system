@@ -1,0 +1,75 @@
+USE attendance_system;
+
+CREATE TABLE IF NOT EXISTS departments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    head VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS teachers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    department_id INT,
+    subject VARCHAR(100),
+    phone VARCHAR(15)
+);
+
+CREATE TABLE IF NOT EXISTS attendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    teacher_id INT,
+    att_date DATE NOT NULL,
+    status ENUM('present','absent') NOT NULL DEFAULT 'present',
+    is_informed TINYINT(1) DEFAULT 0,
+    message_sent TINYINT(1) DEFAULT 0,
+    message_sent_at DATETIME,
+    UNIQUE KEY uq_att (student_id, att_date)
+);
+
+CREATE TABLE IF NOT EXISTS parent_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    attendance_id INT,
+    parent_phone VARCHAR(15),
+    message TEXT,
+    sent_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS admin_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('admin','teacher') DEFAULT 'teacher',
+    teacher_id INT,
+    full_name VARCHAR(100)
+);
+
+INSERT IGNORE INTO admin_users (username, password, role, full_name) VALUES
+('admin',      'admin123',   'admin',   'Administrator'),
+('john.smith', 'teacher123', 'teacher', 'John Smith'),
+('rajesh',     'teacher123', 'teacher', 'Dr. Rajesh Kumar'),
+('priya',      'teacher123', 'teacher', 'Dr. Priya Sharma'),
+('suresh',     'teacher123', 'teacher', 'Dr. Suresh Babu'),
+('meena',      'teacher123', 'teacher', 'Dr. Meena Devi'),
+('ramesh',     'teacher123', 'teacher', 'Dr. Ramesh Nair');
+
+INSERT IGNORE INTO departments (name, head) VALUES
+('Computer Science',        'John Smith'),
+('Agriculture Science',     'Dr. Rajesh Kumar'),
+('Horticulture',            'Dr. Priya Sharma'),
+('Agricultural Engineering','Dr. Suresh Babu'),
+('Agricultural Economics',  'Dr. Meena Devi'),
+('Soil Science',            'Dr. Ramesh Nair');
+
+INSERT IGNORE INTO teachers (name, email, department_id, subject, phone) VALUES
+('John Smith',       'john@donbosco.edu',   1, 'Data Structures',  '9876543201'),
+('Dr. Rajesh Kumar', 'rajesh@donbosco.edu', 2, 'Agronomy',         '9876543202'),
+('Dr. Priya Sharma', 'priya@donbosco.edu',  3, 'Horticulture',     '9876543203'),
+('Dr. Suresh Babu',  'suresh@donbosco.edu', 4, 'Farm Machinery',   '9876543204'),
+('Dr. Meena Devi',   'meena@donbosco.edu',  5, 'Agri Economics',   '9876543205'),
+('Dr. Ramesh Nair',  'ramesh@donbosco.edu', 6, 'Soil Chemistry',   '9876543206'),
+('Prof. Anand Raj',  'anand@donbosco.edu',  1, 'Database Systems', '9876543207'),
+('Prof. Kavitha M',  'kavitha@donbosco.edu',2, 'Plant Pathology',  '9876543208');
+
+SELECT 'Setup complete!' AS result;

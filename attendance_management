@@ -1,0 +1,87 @@
+
+CREATE DATABASE IF NOT EXISTS attendance_management;
+USE attendance_management;
+
+CREATE TABLE IF NOT EXISTS Attendance_department (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    head VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Attendance_teacher (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    subject VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES Attendance_department(id)
+);
+
+CREATE TABLE IF NOT EXISTS Attendance_student (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    roll_number VARCHAR(20) NOT NULL,
+    department_id INT,
+    FOREIGN KEY (department_id) REFERENCES Attendance_department(id)
+);
+
+CREATE TABLE IF NOT EXISTS Attendance_attendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    date DATE NOT NULL,
+    status VARCHAR(10) NOT NULL,
+    student_id INT,
+    FOREIGN KEY (student_id) REFERENCES Attendance_student(id)
+);
+
+-- Sample Departments
+INSERT INTO Attendance_department (name, head) VALUES
+('Agriculture Science', 'Dr. Rajesh Kumar'),
+('Horticulture', 'Dr. Priya Sharma'),
+('Agricultural Engineering', 'Dr. Suresh Babu'),
+('Agricultural Economics', 'Dr. Meena Devi'),
+('Soil Science', 'Dr. Ramesh Nair');
+
+-- Sample Teachers
+INSERT INTO Attendance_teacher (name, subject, email, department_id) VALUES
+('Mr. Anand Kumar', 'Crop Science', 'anand@donbosco.edu', 1),
+('Mrs. Lakshmi Priya', 'Plant Pathology', 'lakshmi@donbosco.edu', 1),
+('Mr. Venkatesh', 'Fruit Science', 'venkatesh@donbosco.edu', 2),
+('Mrs. Sumathi', 'Vegetable Science', 'sumathi@donbosco.edu', 2),
+('Mr. Prakash', 'Farm Machinery', 'prakash@donbosco.edu', 3),
+('Mrs. Kavitha', 'Irrigation Engineering', 'kavitha@donbosco.edu', 3),
+('Mr. Selvam', 'Farm Management', 'selvam@donbosco.edu', 4),
+('Mrs. Radha', 'Agricultural Marketing', 'radha@donbosco.edu', 4),
+('Mr. Murugan', 'Soil Fertility', 'murugan@donbosco.edu', 5),
+('Mrs. Geetha', 'Soil Conservation', 'geetha@donbosco.edu', 5);
+
+-- Sample Students
+INSERT INTO Attendance_student (name, email, roll_number, department_id) VALUES
+('Arun Kumar', 'arun@student.edu', 'AGR001', 1),
+('Priya Devi', 'priya@student.edu', 'AGR002', 1),
+('Ravi Shankar', 'ravi@student.edu', 'AGR003', 1),
+('Kavya Sri', 'kavya@student.edu', 'AGR004', 1),
+('Suresh M', 'suresh@student.edu', 'AGR005', 1),
+('Meena R', 'meena@student.edu', 'HOR001', 2),
+('Karthik S', 'karthik@student.edu', 'HOR002', 2),
+('Deepa V', 'deepa@student.edu', 'HOR003', 2),
+('Raj Kumar', 'raj@student.edu', 'AEN001', 3),
+('Saranya P', 'saranya@student.edu', 'AEN002', 3),
+('Vikram N', 'vikram@student.edu', 'AEN003', 3),
+('Nithya K', 'nithya@student.edu', 'AEC001', 4),
+('Dinesh T', 'dinesh@student.edu', 'AEC002', 4),
+('Pooja M', 'pooja@student.edu', 'SOI001', 5),
+('Bala S', 'bala@student.edu', 'SOI002', 5);
+
+-- Sample Attendance
+INSERT INTO Attendance_attendance (student_id, date, status) VALUES
+(1,'2026-03-01','Present'),(2,'2026-03-01','Present'),
+(3,'2026-03-01','Absent'),(4,'2026-03-01','Present'),
+(5,'2026-03-01','Present'),(6,'2026-03-01','Absent'),
+(7,'2026-03-01','Present'),(8,'2026-03-01','Present'),
+(9,'2026-03-01','Present'),(10,'2026-03-01','Absent'),
+(1,'2026-03-11','Present'),(2,'2026-03-11','Present'),
+(3,'2026-03-11','Present'),(4,'2026-03-11','Absent'),
+(5,'2026-03-11','Present'),(6,'2026-03-11','Present'),
+(7,'2026-03-11','Absent'),(8,'2026-03-11','Present'),
+(9,'2026-03-11','Present'),(10,'2026-03-11','Present');
