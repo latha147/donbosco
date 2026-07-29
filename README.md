@@ -1,19 +1,19 @@
-# @babel/compat-data
+# @babel/helper-globals
 
-> The compat-data to determine required Babel plugins
+> A collection of JavaScript globals for Babel internal usage
 
-See our website [@babel/compat-data](https://babeljs.io/docs/babel-compat-data) for more information.
+See our website [@babel/helper-globals](https://babeljs.io/docs/babel-helper-globals) for more information.
 
 ## Install
 
 Using npm:
 
 ```sh
-npm install --save @babel/compat-data
+npm install --save @babel/helper-globals
 ```
 
 or using yarn:
 
 ```sh
-yarn add @babel/compat-data
+yarn add @babel/helper-globals
 ```
