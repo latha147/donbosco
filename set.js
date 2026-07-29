@@ -1,48 +1,50 @@
-"use strict";
+'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
+var test = require('tape');
+
+var setDunderProto = require('../set');
+
+test('setDunderProto', { skip: !setDunderProto }, function (t) {
+	if (!setDunderProto) {
+		throw 'should never happen; this is just for type narrowing'; // eslint-disable-line no-throw-literal
+	}
+
+	// @ts-expect-error
+	t['throws'](function () { setDunderProto(); }, TypeError, 'throws if no arguments');
+	// @ts-expect-error
+	t['throws'](function () { setDunderProto(undefined); }, TypeError, 'throws with undefined and nothing');
+	// @ts-expect-error
+	t['throws'](function () { setDunderProto(undefined, undefined); }, TypeError, 'throws with undefined and undefined');
+	// @ts-expect-error
+	t['throws'](function () { setDunderProto(null); }, TypeError, 'throws with null and undefined');
+	// @ts-expect-error
+	t['throws'](function () { setDunderProto(null, undefined); }, TypeError, 'throws with null and undefined');
+
+	/** @type {{ inherited?: boolean }} */
+	var obj = {};
+	t.ok('toString' in obj, 'object initially has toString');
+
+	setDunderProto(obj, null);
+	t.notOk('toString' in obj, 'object no longer has toString');
+
+	t.notOk('inherited' in obj, 'object lacks inherited property');
+	setDunderProto(obj, { inherited: true });
+	t.equal(obj.inherited, true, 'object has inherited property');
+
+	t.end();
 });
-exports.default = _set;
-var _superPropBase = require("./superPropBase.js");
-var _defineProperty = require("./defineProperty.js");
-function set(target, property, value, receiver) {
-  if (typeof Reflect !== "undefined" && Reflect.set) {
-    set = Reflect.set;
-  } else {
-    set = function set(target, property, value, receiver) {
-      var base = (0, _superPropBase.default)(target, property);
-      var desc;
-      if (base) {
-        desc = Object.getOwnPropertyDescriptor(base, property);
-        if (desc.set) {
-          desc.set.call(receiver, value);
-          return true;
-        } else if (!desc.writable) {
-          return false;
-        }
-      }
-      desc = Object.getOwnPropertyDescriptor(receiver, property);
-      if (desc) {
-        if (!desc.writable) {
-          return false;
-        }
-        desc.value = value;
-        Object.defineProperty(receiver, property, desc);
-      } else {
-        (0, _defineProperty.default)(receiver, property, value);
-      }
-      return true;
-    };
-  }
-  return set(target, property, value, receiver);
-}
-function _set(target, property, value, receiver, isStrict) {
-  var s = set(target, property, value, receiver || target);
-  if (!s && isStrict) {
-    throw new TypeError("failed to set property");
-  }
-  return value;
-}
 
-//# sourceMappingURL=set.js.map
+test('no dunder proto', { skip: !!setDunderProto }, function (t) {
+	if ('__proto__' in Object.prototype) {
+		t['throws'](
+			// @ts-expect-error
+			function () { ({}).__proto__ = null; }, // eslint-disable-line no-proto
+			Error,
+			'throws when setting Object.prototype.__proto__'
+		);
+	} else {
+		t.notOk('__proto__' in Object.prototype, 'no __proto__ in Object.prototype');
+	}
+
+	t.end();
+});
